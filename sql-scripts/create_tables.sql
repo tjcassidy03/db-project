@@ -19,7 +19,8 @@ CREATE TABLE Playlist
     playlist_name VARCHAR(100) NOT NULL,
     playlist_description VARCHAR(300),
     followers INT NOT NULL,
-    CONSTRAINT Playlist_PK PRIMARY KEY (playlist_id)
+    CONSTRAINT Playlist_PK PRIMARY KEY (playlist_id),
+    CONSTRAINT CK_Playlist_Followers CHECK (followers >= 0) -- Check Constraint #1
 );
 
 CREATE TABLE Album
@@ -30,7 +31,8 @@ CREATE TABLE Album
     release_date DATE NOT NULL,
     total_tracks INT NOT NULL,
     popularity INT NOT NULL,
-    CONSTRAINT Album_PK PRIMARY KEY (album_id)
+    CONSTRAINT Album_PK PRIMARY KEY (album_id),
+    CONSTRAINT CK_Album_Popularity CHECK (popularity BETWEEN 0 AND 100)  -- Check constraint #2
 );
 
 CREATE TABLE Song 
@@ -38,7 +40,8 @@ CREATE TABLE Song
     track_id VARCHAR(50) NOT NULL,
     track_name VARCHAR(100) NOT NULL,
     duration_ms INT NOT NULL,
-    CONSTRAINT Song_PK PRIMARY KEY (track_id)
+    CONSTRAINT Song_PK PRIMARY KEY (track_id),
+    CONSTRAINT CK_Song_Duration CHECK (duration_ms > 0) -- Check constraint #3
 );
 
 CREATE TABLE Artist
