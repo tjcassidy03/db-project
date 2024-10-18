@@ -61,7 +61,7 @@ CREATE TABLE user_playlist
     REFERENCES [User](user_id),
     CONSTRAINT user_playlist_FK2 FOREIGN KEY (playlist_id)
     REFERENCES Playlist(playlist_id),
-    CONSTRAINT user_playlist_PK PRIMARY KEY (playlist_id)
+    CONSTRAINT user_playlist_PK PRIMARY KEY (user_id,playlist_id)
 );
 
 CREATE TABLE user_songs
@@ -114,7 +114,7 @@ CREATE TABLE album_songs
     REFERENCES Song(track_id),
     CONSTRAINT album_songs_FK2 FOREIGN KEY (album_id)
     REFERENCES Album(album_id),
-    CONSTRAINT album_songs_PK PRIMARY KEY (track_id)
+    CONSTRAINT album_songs_PK PRIMARY KEY (album_id, track_id)
 );
 
 CREATE TABLE album_artists
@@ -125,7 +125,7 @@ CREATE TABLE album_artists
     REFERENCES Album(album_id),
     CONSTRAINT album_artists_FK2 FOREIGN KEY (artist_id)
     REFERENCES Artist(artist_id),
-    CONSTRAINT album_artists_PK PRIMARY KEY (album_id)  
+    CONSTRAINT album_artists_PK PRIMARY KEY (artist_id, album_id)  
 );
 
 CREATE TABLE album_genres
