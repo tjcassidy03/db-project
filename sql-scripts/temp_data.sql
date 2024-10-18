@@ -165,38 +165,74 @@ VALUES ('ar_1', 'Velvet Echo', 1500000, 'http://example.com/ar1.jpg'),
   ('ar_29', 'Dusk Horizon', 12390, 'http://example.com/ar29.jpg'),
   ('ar_30', 'Ella Breeze', 32178, 'http://example.com/ar30.jpg');
 
--- user_playlist insert
-INSERT INTO user_playlist (user_id, playlist_id)
-VALUES ('user123', 'playlist456');
+BULK INSERT user_playlist
+FROM "db_project - user_playlist.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --user_playlist_insert
 
--- user_songs insert
-INSERT INTO user_songs (user_id, track_id)
-VALUES ('user123', 'track012');
+BULK INSERT user_songs
+FROM "db_project - user_songs.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --user_songs_insert
 
--- user_albums insert
-INSERT INTO user_albums (user_id, album_id)
-VALUES ('user123', 'a');
+BULK INSERT user_albums
+FROM "db_project - user_albums.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --user_albums_insert
 
--- playlist_images insert
-INSERT INTO playlist_images (playlist_id, image_uri)
-VALUES ('playlist456', 'http://example.com/playlist456_image1.jpg');
+BULK INSERT playlist_images
+FROM "db_project - playlist_images.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --playlist_images_insert
 
--- playlist_songs
-INSERT INTO playlist_songs (playlist_id, track_id)
-VALUES ('playlist456', 'track012');
+BULK INSERT playlist_songs
+FROM "db_project - playlist_songs.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --playlist_songs_insert
 
--- album_songs
-INSERT INTO album_songs (track_id, album_id)
-VALUES ('track012', 'a');
+BULK INSERT album_songs
+FROM "db_project - album_songs.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --album_songs_insert
 
--- album_artists
-INSERT INTO album_artists (album_id, artist_id)
-VALUES ('a', 'artist345');
+BULK INSERT album_artists
+FROM "db_project - album_artists.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --album_artists_insert
 
--- album_genres
-INSERT INTO album_genres (album_id, genre)
-VALUES ('a', 'Rock');
+BULK INSERT album_genres
+FROM "db_project - album_genres.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --album_genres_insert
 
--- song_artists
-INSERT INTO song_artists (track_id, artist_id)
-VALUES ('track012', 'artist345');
+BULK INSERT song_artists
+FROM "db_project - song_artists.csv"
+WITH
+(
+    FORMAT='CSV',
+    FIRSTROW=2
+); --song_artists_insert
