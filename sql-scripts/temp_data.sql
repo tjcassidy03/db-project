@@ -166,7 +166,7 @@ VALUES ('ar_1', 'Velvet Echo', 1500000, 'http://example.com/ar1.jpg'),
   ('ar_30', 'Ella Breeze', 32178, 'http://example.com/ar30.jpg');
 
 BULK INSERT user_playlist
-FROM "db_project - user_playlist.csv"
+FROM "csv-files/db_project - user_playlist.csv"
 WITH
 (
     FORMAT='CSV',
@@ -174,7 +174,7 @@ WITH
 ); --user_playlist_insert
 
 BULK INSERT user_songs
-FROM "db_project - user_songs.csv"
+FROM "csv-files/db_project - user_songs.csv"
 WITH
 (
     FORMAT='CSV',
@@ -182,7 +182,7 @@ WITH
 ); --user_songs_insert
 
 BULK INSERT user_albums
-FROM "db_project - user_albums.csv"
+FROM "csv-files/db_project - user_albums.csv"
 WITH
 (
     FORMAT='CSV',
@@ -190,7 +190,7 @@ WITH
 ); --user_albums_insert
 
 BULK INSERT playlist_images
-FROM "db_project - playlist_images.csv"
+FROM "csv-files/db_project - playlist_images.csv"
 WITH
 (
     FORMAT='CSV',
@@ -198,7 +198,7 @@ WITH
 ); --playlist_images_insert
 
 BULK INSERT playlist_songs
-FROM "db_project - playlist_songs.csv"
+FROM "csv-files/db_project - playlist_songs.csv"
 WITH
 (
     FORMAT='CSV',
@@ -206,7 +206,7 @@ WITH
 ); --playlist_songs_insert
 
 BULK INSERT album_songs
-FROM "db_project - album_songs.csv"
+FROM "csv-files/db_project - album_songs.csv"
 WITH
 (
     FORMAT='CSV',
@@ -214,7 +214,7 @@ WITH
 ); --album_songs_insert
 
 BULK INSERT album_artists
-FROM "db_project - album_artists.csv"
+FROM "csv-files/db_project - album_artists.csv"
 WITH
 (
     FORMAT='CSV',
@@ -222,7 +222,7 @@ WITH
 ); --album_artists_insert
 
 BULK INSERT album_genres
-FROM "db_project - album_genres.csv"
+FROM "csv-files/db_project - album_genres.csv"
 WITH
 (
     FORMAT='CSV',
@@ -230,7 +230,7 @@ WITH
 ); --album_genres_insert
 
 BULK INSERT song_artists
-FROM "db_project - song_artists.csv"
+FROM "csv-files/db_project - song_artists.csv"
 WITH
 (
     FORMAT='CSV',
