@@ -165,6 +165,8 @@ VALUES ('ar_1', 'Velvet Echo', 1500000, 'http://example.com/ar1.jpg'),
   ('ar_29', 'Dusk Horizon', 12390, 'http://example.com/ar29.jpg'),
   ('ar_30', 'Ella Breeze', 32178, 'http://example.com/ar30.jpg');
 
+
+-- NOTE: Before doing bulk inserts, change these to absolute filepaths
 BULK INSERT user_playlist
 FROM "csv-files/db_project - user_playlist.csv"
 WITH
