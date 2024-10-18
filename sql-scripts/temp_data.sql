@@ -68,7 +68,36 @@ VALUES ('p_1', 'Chill Vibes', 'Chillin Like A Villain', 100),
 
 -- Album insert
 INSERT INTO Album (album_id, album_name, art_uri, release_date, total_tracks, popularity)
-VALUES ('album789', 'Greatest Hits', 'http://example.com/album789.jpg', '2023-01-01', 15, 85);
+VALUES ('a_1', 'Echoes of Tomorrow', 'http://example.com/a1.jpg', '1990-01-01', 15, 152),
+  ('a_2', 'Midnight Reflections', 'http://example.com/a2.jpg', '1991-02-02', 16, 53),
+  ('a_3', 'Celestial Journeys', 'http://example.com/a3.jpg', '1992-03-03', 17, 47),
+  ('a_4', 'Whispers in the Wind', 'http://example.com/a4.jpg', '1993-04-04', 18, 27),
+  ('a_5', 'Urban Serenade', 'http://example.com/a5.jpg', '1994-05-05', 15, 56),
+  ('a_6', 'Faded Dreams', 'http://example.com/a6.jpg', '1995-06-06', 16, 48),
+  ('a_7', 'Shadows and Light', 'http://example.com/a7.jpg', '1996-07-07', 17, 285),
+  ('a_8', 'Heartbeat Symphony', 'http://example.com/a8.jpg', '1997-08-08', 18, 342),
+  ('a_9', 'Timeless Horizons', 'http://example.com/a9.jpg', '1998-09-09', 15, 887),
+  ('a_10', 'Lost in Translation', 'http://example.com/a10.jpg', '1999-10-10', 16, 987),
+  ('a_11', 'Wanderlust Melodies', 'http://example.com/a11.jpg', '2000-11-11', 17, 566),
+  ('a_12', 'Secrets of the Sea', 'http://example.com/a12.jpg', '2001-12-12', 18, 465),
+  ('a_13', 'Kaleidoscope Visions', 'http://example.com/a13.jpg', '2002-01-13', 15, 902),
+  ('a_14', 'Electric Daydreams', 'http://example.com/a14.jpg', '2003-02-14', 16, 327),
+  ('a_15', 'Portraits of Emotion', 'http://example.com/a15.jpg', '2004-03-15', 17, 542),
+  ('a_16', 'Rhythm of the Night', 'http://example.com/a16.jpg', '2007-04-16', 18, 633),
+  ('a_17', 'Through the Looking Glass', 'http://example.com/a17.jpg', '2008-05-17', 15, 142),
+  ('a_18', 'Fragments of Time', 'http://example.com/a18.jpg', '2009-06-18', 16, 987),
+  ('a_19', 'Nature’s Canvas', 'http://example.com/a19.jpg', '2010-07-19', 17, 213),
+  ('a_20', 'Unwritten Chapters', 'http://example.com/a20.jpg', '2011-08-20', 18, 243),
+  ('a_21', 'Celestial Echoes', 'http://example.com/a21.jpg', '2012-09-21', 15, 534),
+  ('a_22', 'The Color of Sound', 'http://example.com/a22.jpg', '2013-10-22', 16, 765),
+  ('a_23', 'Resonance of Souls', 'http://example.com/a23.jpg', '2014-11-23', 17, 124),
+  ('a_24', 'Untamed Spirit', 'http://example.com/a24.jpg', '2015-12-24', 18, 908),
+  ('a_25', 'Reflections of a Dreamer', 'http://example.com/a25.jpg', '2016-01-25', 15, 782),
+  ('a_26', 'Harmony in Chaos', 'http://example.com/a26.jpg', '2017-02-26', 16, 531),
+  ('a_27', 'A Journey Within', 'http://example.com/a27.jpg', '2018-03-27', 17, 382),
+  ('a_28', 'Between the Lines', 'http://example.com/a28.jpg', '2019-04-28', 18, 324),
+  ('a_29', 'Vintage Vibes', 'http://example.com/a29.jpg', '2022-05-29', 15, 490),
+  ('a_30', 'The Art of Stillness', 'http://example.com/a30.jpg', '2024-06-30', 16, 538);
 
 -- Song insert
 INSERT INTO Song (track_id, track_name, duration_ms)
@@ -88,7 +117,7 @@ VALUES ('user123', 'track012');
 
 -- user_albums insert
 INSERT INTO user_albums (user_id, album_id)
-VALUES ('user123', 'album789');
+VALUES ('user123', 'a');
 
 -- playlist_images insert
 INSERT INTO playlist_images (playlist_id, image_uri)
@@ -100,15 +129,15 @@ VALUES ('playlist456', 'track012');
 
 -- album_songs
 INSERT INTO album_songs (track_id, album_id)
-VALUES ('track012', 'album789');
+VALUES ('track012', 'a');
 
 -- album_artists
 INSERT INTO album_artists (album_id, artist_id)
-VALUES ('album789', 'artist345');
+VALUES ('a', 'artist345');
 
 -- album_genres
 INSERT INTO album_genres (album_id, genre)
-VALUES ('album789', 'Rock');
+VALUES ('a', 'Rock');
 
 -- song_artists
 INSERT INTO song_artists (track_id, artist_id)
