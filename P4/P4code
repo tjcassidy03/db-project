@@ -52,7 +52,9 @@ BEGIN
     FROM playlist_songs
     INNER JOIN Song ON playlist_songs.track_id = Song.track_id
   )
-  WHERE playlist_id = @playlist_id
+  WHERE playlist_id = @playlist_id;
+  RETURN @lengthSum;
+END;
 
 3. Create 3 views :- For your project create three views for any 3 tables
 
