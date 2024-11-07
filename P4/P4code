@@ -3,17 +3,29 @@ how or why they would be used
 -- Procedure 1 : Add a Song to A Playlist
 CREATE PROCEDURE AddPlaylistSong
   @playlist_id VARCHAR(50),
-  @track_id VARCHAR(50),
+  @track_id VARCHAR(50)
 AS
 BEGIN
   INSERT INTO playlist_songs(playlist_id, track_id)
   VALUES (@playlist_id, @track_id);
 END;
 
+-- Procedure 2 : Adding an Album's songs to a Playlist
+CREATE PROCEDURE AddPlaylistAlbum
+  @playlist_id VARCHAR(50),
+  @album_id VARCHAR(50)
+AS
+BEGIN
+  INSERT INTO playlist_songs(playlist_id, track_id)
+  VALUES (@playlist_id,
+    SELECT track_id
+    FROM album_songs
+    WHERE album_id = @album_id); --CHECK THAT THIS WORKS
+END;
 
 2. Create 3 functions :- For your project create three functions and emphasize how or why they
 would be used
-
+-- Function 1 : Sum a Playlist's songs' lengths
 
 3. Create 3 views :- For your project create three views for any 3 tables
 
