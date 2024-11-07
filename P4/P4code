@@ -56,6 +56,20 @@ BEGIN
   RETURN @lengthSum;
 END;
 
+-- Function 2 : Count an artist's published songs 
+CREATE FUNCTION Spotify_Project.SongCount (@artist_id)
+RETURNS INT
+AS
+BEGIN
+  DECLARE @count INT:
+  SELECT @count = COUNT(track_id)
+  FROM song_artists
+  WHERE artist_id = @artist_id;
+  RETURN @count;
+END;
+
+-- Function 3 : 
+
 3. Create 3 views :- For your project create three views for any 3 tables
 
 
