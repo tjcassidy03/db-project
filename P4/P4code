@@ -1,5 +1,14 @@
 1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize
 how or why they would be used
+-- Procedure 1 : Add a Song to A Playlist
+CREATE PROCEDURE AddPlaylistSong
+  @playlist_id VARCHAR(50),
+  @track_id VARCHAR(50),
+AS
+BEGIN
+  INSERT INTO playlist_songs(playlist_id, track_id)
+  VALUES (@playlist_id, @track_id);
+END;
 
 
 2. Create 3 functions :- For your project create three functions and emphasize how or why they
