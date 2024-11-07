@@ -1,0 +1,20 @@
+1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize
+how or why they would be used
+
+
+2. Create 3 functions :- For your project create three functions and emphasize how or why they
+would be used
+
+
+3. Create 3 views :- For your project create three views for any 3 tables
+
+
+4. Create 1 Trigger :- For your project create one Trigger associated with any type of action
+between the referenced tables(primary-foreign key relationship tables)
+
+
+5. Implement 1 Column Encryption :- For any 1 column in your table, implement the column
+encryption for security purposes
+
+
+6. Create 3 non-clustered indexes :- create 3 non-clustered indexes on your tables.
