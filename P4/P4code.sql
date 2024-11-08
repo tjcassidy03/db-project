@@ -1,5 +1,5 @@
-1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize
-how or why they would be used
+-- 1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize
+-- how or why they would be used
 -- Procedure 1 : Add a Song to A Playlist
 CREATE PROCEDURE AddPlaylistSong
   @playlist_id VARCHAR(50),
@@ -122,8 +122,27 @@ FROM Artist;
 
 
 
-4. Create 1 Trigger :- For your project create one Trigger associated with any type of action
-between the referenced tables(primary-foreign key relationship tables)
+-- 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action
+-- between the referenced tables(primary-foreign key relationship tables)
+
+-- Trigger to delete song from user_songs when it’s deleted from all playlists of a user
+CREATE TRIGGER DeleteUserSongOnPlaylistRemoval
+ON playlist_songs
+AFTER DELETE
+AS
+BEGIN
+    DELETE us
+    FROM user_songs us
+    JOIN deleted d ON us.track_id = d.track_id
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM playlist_songs ps
+        JOIN user_playlist up ON ps.playlist_id = up.playlist_id
+        WHERE up.user_id = us.user_id
+          AND ps.track_id = us.track_id
+    );
+END;
+
 
 
 5. Implement 1 Column Encryption :- For any 1 column in your table, implement the column
