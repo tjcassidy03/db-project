@@ -18,9 +18,9 @@ AS
 BEGIN
   INSERT INTO playlist_songs(playlist_id, track_id)
   VALUES (@playlist_id,
-    SELECT track_id
+    (SELECT track_id
     FROM album_songs
-    WHERE album_id = @album_id); --CHECK THAT THIS WORKS
+    WHERE album_id = @album_id)); --CHECK THAT THIS WORKS
 END;
 
 -- Procedure 3 : Removing an artist's songs from a playlist
@@ -88,11 +88,12 @@ END;
 3. Create 3 views :- For your project create three views for any 3 tables
 
 
--- View 1 : Show a User's PlayLists, the number of songs, and their durations
+-- View 1 : Show each User's PlayLists, the number of songs, and their durations
 CREATE VIEW UserPlayListView AS
 SELECT 
-  P.playlist_name,
-  P.playlist_description,
+  user_id
+  playlist_name,
+  playlist_description,
   (
     SELECT COUNT(*)
     FROM playlist_songs
@@ -100,7 +101,9 @@ SELECT
   ) AS playlist_song_count,
   Spotify_Project.PlaylistLength(P.playlist_id)
 FROM user_playlist U
-INNER JOIN Playlist P ON U.playlist_id = P.playlist_id;
+INNER JOIN [User] N ON U.user_id = N.user_id
+INNER JOIN Playlist P ON U.playlist_id = P.playlist_id
+GROUP BY [User], playlist_name;
 
 -- View 2 : Show All Artists' Name, followers, image, song-count to viewer for browsing
 CREATE VIEW UserArtistBrowse
@@ -115,6 +118,8 @@ SELECT
   ) AS artist_song_count
 FROM Artist;
   
+-- View 3 : List all Genres, and Albums for each Genre
+
 
 
 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action
