@@ -173,3 +173,6 @@ ALTER TABLE [User] DROP COLUMN email;
 
 
 -- 6. Create 3 non-clustered indexes :- create 3 non-clustered indexes on your tables.
+CREATE NONCLUSTERED INDEX idx_user_display_name ON [User](display_name); --we'll want these names to be quick to query
+CREATE NONCLUSTERED INDEX idx_playlist_name ON Playlist(playlist_name);
+CREATE NONCLUSTERED INDEX idx_album_name ON Album(album_name); 
