@@ -114,7 +114,16 @@ SELECT
   ) AS artist_song_count
 FROM Artist;
 -- View 3 : List all Genres, and Albums for each Genre
-
+CREATE VIEW AlbumsInGenre AS
+SELECT
+  album_genres.genre as Genre
+  Album.album_name as AlbumName
+FROM
+  album_genres
+JOIN
+  Album on album_genres.album_id = Album.album_id
+ORDER BY
+  album_genres.genre, Album.album_name;
 
 -- 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action between the referenced tables(primary-foreign key relationship tables)
 -- Trigger to delete song from user_songs when it’s deleted from all playlists of a user
