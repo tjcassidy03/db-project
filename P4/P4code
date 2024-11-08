@@ -25,7 +25,7 @@ END;
 
 -- Procedure 3 : Removing an artist's songs from a playlist
 CREATE PROCEDURE ArtistPanicButton
-  @playlist_id VARCHAR(50)
+  @playlist_id VARCHAR(50),
   @artist_id VARCHAR(50)
 AS
 BEGIN
@@ -91,7 +91,7 @@ END;
 -- View 1 : Show each User's PlayLists, the number of songs, and their durations
 CREATE VIEW UserPlayListView AS
 SELECT 
-  user_id
+  user_id,
   playlist_name,
   playlist_description,
   (
