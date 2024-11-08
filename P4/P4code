@@ -41,24 +41,22 @@ END;
 2. Create 3 functions :- For your project create three functions and emphasize how or why they
 would be used
 -- Function 1 : Sum a Playlist's songs' lengths
-CREATE FUNCTION Spotify_Project.PlaylistLength (@playlist_id INT)
+CREATE FUNCTION PlaylistLength (@playlist_id INT)
 RETURNS INT
 AS
 BEGIN
   DECLARE @lengthSum INT;
+  
   SELECT @lengthSum = SUM(duration_ms)
-  FROM (
-    SELECT *
-    FROM playlist_songs
-    INNER JOIN Song ON playlist_songs.track_id = Song.track_id
-    WHERE playlist_id = @playlist_id;
-  )
+  FROM playlist_songs P
+  INNER JOIN Song S ON P.track_id = S.track_id
+  WHERE P.playlist_id = @playlist_id;
   
   RETURN @lengthSum;
 END;
-
+GO
 -- Function 2 : Count an artist's published songs 
-CREATE FUNCTION Spotify_Project.SongCount (@artist_id INT)
+CREATE FUNCTION SongCount (@artist_id INT)
 RETURNS INT
 AS
 BEGIN
@@ -68,20 +66,18 @@ BEGIN
   WHERE artist_id = @artist_id;
   RETURN @count;
 END;
-
+GO
 -- Function 3 : Get an Album's total duration
-CREATE FUNCTION Spotify_Project.SongCount (@album_id INT)
+CREATE FUNCTION AlbumLength (@album_id INT)
 RETURNS INT
 AS
 BEGIN
   DECLARE @total_dur INT;
-  SELECT @total_dur = SUM(duration_ms)
-  FROM (
-    SELECT * 
-    FROM album_songs
-    INNER JOIN Song ON album_songs.track_id = Song.track_id
-    WHERE album_id = @album_id
-  )
+  SELECT @total_dur = SUM(S.duration_ms)
+  FROM album_songs A
+  INNER JOIN Song S ON A.track_id = S.track_id
+  WHERE album_id = @album_id
+  
   RETURN @total_dur;
 END;
 
