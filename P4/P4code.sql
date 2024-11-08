@@ -1,5 +1,10 @@
 -- 1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize how or why they would be used
 -- Procedure 1 : Add a Song to A Playlist
+
+USE Spotify_Project;
+GO
+
+
 CREATE PROCEDURE AddPlaylistSong
   @playlist_id VARCHAR(50),
   @track_id VARCHAR(50)
@@ -9,6 +14,7 @@ BEGIN
   VALUES (@playlist_id, @track_id);
 END;
 
+GO
 -- Procedure 2 : Adding an Album's songs to a Playlist
 CREATE PROCEDURE AddPlaylistAlbum
   @playlist_id VARCHAR(50),
@@ -21,6 +27,8 @@ BEGIN
     FROM album_songs
     WHERE album_id = @album_id)); --CHECK THAT THIS WORKS
 END;
+
+GO
 
 -- Procedure 3 : Removing an artist's songs from a playlist
 CREATE PROCEDURE ArtistPanicButton
@@ -37,6 +45,7 @@ BEGIN
   )
 END;
 
+GO
 
 -- 2. Create 3 functions :- For your project create three functions and emphasize how or why they would be used
 -- Function 1 : Sum a Playlist's songs' lengths
@@ -82,27 +91,31 @@ BEGIN
   RETURN @total_dur;
 END;
 
+GO
 
 -- 3. Create 3 views :- For your project create three views for any 3 tables
 -- View 1 : Show each User's Playlists, the number of songs, and their durations
 CREATE VIEW UserPlaylistView AS
 SELECT 
-  user_id,
-  playlist_name,
-  playlist_description,
+  N.user_id,
+  P.playlist_name,
+  P.playlist_description,
   (
     SELECT COUNT(*)
     FROM playlist_songs
     WHERE playlist_id = P.playlist_id
   ) AS playlist_song_count,
-  Spotify_Project.PlaylistLength(P.playlist_id)
+  dbo.PlaylistLength(P.playlist_id) AS playlist_duration
 FROM user_playlist U
 INNER JOIN [User] N ON U.user_id = N.user_id
 INNER JOIN Playlist P ON U.playlist_id = P.playlist_id
-GROUP BY [User], playlist_name;
+GROUP BY N.user_id, P.playlist_name, P.playlist_description, P.playlist_id;
+
+GO
+
 
 -- View 2 : Show All Artists' Name, followers, image, song-count to viewer for browsing
-CREATE VIEW UserArtistBrowse
+CREATE VIEW UserArtistBrowse AS
 SELECT
   artist_name,
   follower_count,
@@ -113,18 +126,20 @@ SELECT
     INNER JOIN Song ON song_artists.track_id = Song.track_id
   ) AS artist_song_count
 FROM Artist;
+
+GO
+
 -- View 3 : List all Genres, and Albums for each Genre
 CREATE VIEW AlbumsInGenre AS
 SELECT
-  album_genres.genre as Genre
+  album_genres.genre as Genre,
   Album.album_name as AlbumName
 FROM
   album_genres
 JOIN
-  Album on album_genres.album_id = Album.album_id
-ORDER BY
-  album_genres.genre, Album.album_name;
+  Album on album_genres.album_id = Album.album_id;
 
+GO
 
 -- 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action between the referenced tables(primary-foreign key relationship tables)
 -- Trigger to delete song from user_songs when it’s deleted from all playlists of a user
@@ -145,31 +160,44 @@ BEGIN
     );
 END;
 
+GO
 
 -- 5. Implement 1 Column Encryption :- For any 1 column in your table, implement the column encryption for security purposes
 -- Add an encrypted column to store encrypted emails
+
 CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'CS4750!';
+GO
 
 CREATE CERTIFICATE UserCert
 WITH SUBJECT = 'Certificate for User Email Encryption';
+GO
 
 CREATE SYMMETRIC KEY UserKey
 WITH ALGORITHM = AES_256
 ENCRYPTION BY CERTIFICATE UserCert;
+GO
 
 ALTER TABLE [User]
 ADD encrypted_email VARBINARY(128);
+GO
 
 OPEN SYMMETRIC KEY UserKey
 DECRYPTION BY CERTIFICATE UserCert;
-SELECT name FROM sys.symmetric_keys
+GO
+
+SELECT name FROM sys.symmetric_keys;
+GO
 
 UPDATE [User]
 SET encrypted_email = EncryptByKey(Key_GUID('UserKey'), email);
+GO
 
 CLOSE SYMMETRIC KEY UserKey;
+GO
 
 ALTER TABLE [User] DROP COLUMN email;
+GO
+
 
 
 -- 6. Create 3 non-clustered indexes :- create 3 non-clustered indexes on your tables.
