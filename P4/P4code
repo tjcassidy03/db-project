@@ -88,6 +88,35 @@ END;
 3. Create 3 views :- For your project create three views for any 3 tables
 
 
+-- View 1 : Show a User's PlayLists, the number of songs, and their durations
+CREATE VIEW UserPlayListView AS
+SELECT 
+  P.playlist_name,
+  P.playlist_description,
+  (
+    SELECT COUNT(*)
+    FROM playlist_songs
+    WHERE playlist_id = P.playlist_id
+  ) AS playlist_song_count,
+  Spotify_Project.PlaylistLength(P.playlist_id)
+FROM user_playlist U
+INNER JOIN Playlist P ON U.playlist_id = P.playlist_id;
+
+-- View 2 : Show All Artists' Name, followers, image, song-count to viewer for browsing
+CREATE VIEW UserArtistBrowse
+SELECT
+  artist_name,
+  follower_count,
+  artist_image_uri,
+  (
+    SELECT COUNT (*)
+    FROM song_artists
+    INNER JOIN Song ON song_artists.track_id = Song.track_id
+  ) AS artist_song_count
+FROM Artist;
+  
+
+
 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action
 between the referenced tables(primary-foreign key relationship tables)
 
