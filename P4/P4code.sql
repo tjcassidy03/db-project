@@ -1,5 +1,4 @@
--- 1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize
--- how or why they would be used
+-- 1. Create 3 Stored Procedures :- For your project create three stored procedures and emphasize how or why they would be used
 -- Procedure 1 : Add a Song to A Playlist
 CREATE PROCEDURE AddPlaylistSong
   @playlist_id VARCHAR(50),
@@ -38,8 +37,8 @@ BEGIN
   )
 END;
 
-2. Create 3 functions :- For your project create three functions and emphasize how or why they
-would be used
+
+-- 2. Create 3 functions :- For your project create three functions and emphasize how or why they would be used
 -- Function 1 : Sum a Playlist's songs' lengths
 CREATE FUNCTION PlaylistLength (@playlist_id INT)
 RETURNS INT
@@ -55,6 +54,7 @@ BEGIN
   RETURN @lengthSum;
 END;
 GO
+  
 -- Function 2 : Count an artist's published songs 
 CREATE FUNCTION SongCount (@artist_id INT)
 RETURNS INT
@@ -67,6 +67,7 @@ BEGIN
   RETURN @count;
 END;
 GO
+  
 -- Function 3 : Get an Album's total duration
 CREATE FUNCTION AlbumLength (@album_id INT)
 RETURNS INT
@@ -81,11 +82,10 @@ BEGIN
   RETURN @total_dur;
 END;
 
-3. Create 3 views :- For your project create three views for any 3 tables
 
-
--- View 1 : Show each User's PlayLists, the number of songs, and their durations
-CREATE VIEW UserPlayListView AS
+-- 3. Create 3 views :- For your project create three views for any 3 tables
+-- View 1 : Show each User's Playlists, the number of songs, and their durations
+CREATE VIEW UserPlaylistView AS
 SELECT 
   user_id,
   playlist_name,
@@ -113,14 +113,10 @@ SELECT
     INNER JOIN Song ON song_artists.track_id = Song.track_id
   ) AS artist_song_count
 FROM Artist;
-  
 -- View 3 : List all Genres, and Albums for each Genre
 
 
-
--- 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action
--- between the referenced tables(primary-foreign key relationship tables)
-
+-- 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action between the referenced tables(primary-foreign key relationship tables)
 -- Trigger to delete song from user_songs when it’s deleted from all playlists of a user
 CREATE TRIGGER DeleteUserSongOnPlaylistRemoval
 ON playlist_songs
@@ -140,9 +136,7 @@ BEGIN
 END;
 
 
-
-5. Implement 1 Column Encryption :- For any 1 column in your table, implement the column
-encryption for security purposes
+-- 5. Implement 1 Column Encryption :- For any 1 column in your table, implement the column encryption for security purposes
 
 
-6. Create 3 non-clustered indexes :- create 3 non-clustered indexes on your tables.
+-- 6. Create 3 non-clustered indexes :- create 3 non-clustered indexes on your tables.
