@@ -125,6 +125,7 @@ JOIN
 ORDER BY
   album_genres.genre, Album.album_name;
 
+
 -- 4. Create 1 Trigger :- For your project create one Trigger associated with any type of action between the referenced tables(primary-foreign key relationship tables)
 -- Trigger to delete song from user_songs when it’s deleted from all playlists of a user
 CREATE TRIGGER DeleteUserSongOnPlaylistRemoval
@@ -146,6 +147,29 @@ END;
 
 
 -- 5. Implement 1 Column Encryption :- For any 1 column in your table, implement the column encryption for security purposes
+-- Add an encrypted column to store encrypted emails
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'CS4750!';
+
+CREATE CERTIFICATE UserCert
+WITH SUBJECT = 'Certificate for User Email Encryption';
+
+CREATE SYMMETRIC KEY UserKey
+WITH ALGORITHM = AES_256
+ENCRYPTION BY CERTIFICATE UserCert;
+
+ALTER TABLE [User]
+ADD encrypted_email VARBINARY(128);
+
+OPEN SYMMETRIC KEY UserKey
+DECRYPTION BY CERTIFICATE UserCert;
+SELECT name FROM sys.symmetric_keys
+
+UPDATE [User]
+SET encrypted_email = EncryptByKey(Key_GUID('UserKey'), email);
+
+CLOSE SYMMETRIC KEY UserKey;
+
+ALTER TABLE [User] DROP COLUMN email;
 
 
 -- 6. Create 3 non-clustered indexes :- create 3 non-clustered indexes on your tables.
