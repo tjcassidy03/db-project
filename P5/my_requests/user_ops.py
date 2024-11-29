@@ -26,3 +26,35 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"message": "User created"}), 201
+
+
+@user_routes.route('/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if 'email' in data:
+        user.email = data['email']
+    if 'display_name' in data:
+        user.display_name = data['display_name']
+    if 'image_uri' in data:
+        user.image_uri = data['image_uri']
+    if 'product' in data:
+        user.product = data['product']
+
+    db.session.commit()
+    return jsonify({"message": "User updated successfully"}), 200
+
+@user_routes.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"message": "User deleted successfully"}), 200
