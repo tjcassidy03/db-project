@@ -7,7 +7,7 @@ song_routes = Blueprint('song_routes', __name__)
 @song_routes.route('songs/', methods=['GET'])
 def get_songs():
     songs = Song.query.all()
-    result = [{'track_id': Song.song_id}]
+    result = [{'track_id': song.song_id, 'track_name':song.track_name,'duration_ms':song.duration_ms} for song in songs]
     return jsonify(result), 200
 
 @song_routes.route('songs/', methods=['POST'])
