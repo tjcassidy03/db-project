@@ -52,7 +52,6 @@ def update_album(album_id):
 
 @album_routes.route('/albums/<int:album_id>', methods=['DELETE'])
 def delete_album(album_id):
-    data = request.get_json()
     album = Album.query.get(album_id)
 
     if not album:

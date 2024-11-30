@@ -43,7 +43,6 @@ def update_song(track_id):
 
 @song_routes.route('/user/<int:track_id>', methods=['DELETE'])
 def delete_song(track_id):
-    data = request.get_json()
     song = Song.query.get(track_id)
 
     if not song:

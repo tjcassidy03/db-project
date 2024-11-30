@@ -30,7 +30,7 @@ def create_playlist():
 playlist_routes.route('/playlists/<int:playlist_id>', methods=['PUT'])
 def update_playlist(playlist_id):
     data = request.get_json()
-    playlist = data.query.get(playlist_id)
+    playlist = Playlist.query.get(playlist_id)
 
     if not playlist:
         return jsonify({'error':'playlist not found!'}), 404
@@ -48,8 +48,7 @@ def update_playlist(playlist_id):
 
 playlist_routes.route('/playlists/<int:playlist_id>', method=['DELETE'])
 def delete_playlist(playlist_id):
-    data = request.get_json()
-    playlist = data.query.get(playlist_id)
+    playlist = Playlist.query.get(playlist_id)
 
     if not playlist:
         return jsonify({'error':'playlist not found!'}), 404
