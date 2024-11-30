@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, redirect, session
+import mysql.connector
 from app import db
 from dotenv import load_dotenv
 import os
@@ -15,6 +16,20 @@ AUTH_URL = 'https://accounts.spotify.com/authorize'
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
 API_BASE_URL = 'https://api.spotify.com/v1/'
 
+db_password = os.getenv('DB_PASSWORD')
+db_user = os.getenv('DB_USERNAME')
+db = os.getenv('DB')
+db_host = os.getenv('DB_HOST')
+
+mydb = mysql.connector.connect (
+    host = db_host,
+    user = db_user,
+    password = db_password,
+    database = db
+)
+
+mycursor = mydb.cursor()
+
 home_route = Blueprint('home_route', __name__)
 
 @home_route.route('/')
@@ -23,7 +38,7 @@ def welcome():
 
 @home_route.route('/login')
 def login():
-    scope = 'user-read-private user-read-email'
+    scope = 'user-read-private user-read-email user-library-read'
     params = {
         'client_id': CLIENT_ID,
         'response_type': 'code',
@@ -67,17 +82,48 @@ def home():
     if datetime.now().timestamp() > session['expires_at']:
         return redirect("/refresh-token")
     
-    return "<a href='/update-database'>Update Database</a></br><a href='/users'>Users</a></br>"
+    return "<a href='/update-database-songs'>Update Database Songs</a></br><a href='/users'>Users</a></br>"
 
-@home_route.route("/update-database")
-def update_database():
+@home_route.route("/update-database-songs")
+def update_database_songs():
     if 'access_token' not in session:
         return redirect("/login")
-    
     if datetime.now().timestamp() > session['expires_at']:
         return redirect("/refresh-token")
     
-    return "Update Database"
+    headers = {
+        'Authorization': f"Bearer {session['access_token']}"
+    }
+
+    next_url = "https://api.spotify.com/v1/me/tracks?offset=0&limit=50"
+    song_sql = """INSERT INTO Song (track_id, track_name, duration_ms) 
+    VALUES (%s, %s, %s) 
+    ON DUPLICATE KEY UPDATE 
+    track_name = VALUES(track_name),
+    duration_ms = VALUES(duration_ms)"""
+    val = []
+
+    while next_url:
+        response = requests.get(next_url, headers=headers)
+        tracks = response.json()
+        if "error" in tracks:
+            return f"Error fetching tracks: {tracks['error']['message']}"
+        for item in tracks.get('items', []):
+            track = item.get('track', {})
+            if track:
+                track_id = track.get('id')
+                track_name = track.get('name')
+                duration_ms = track.get('duration_ms')
+                if track_id and track_name and duration_ms is not None:
+                    val.append((track_id, track_name, duration_ms))
+        next_url = tracks.get('next')
+        
+    if val:
+        mycursor.executemany(song_sql, val)
+        mydb.commit()
+        return f"{mycursor.rowcount} songs were inserted into the database.<br><a href='/home'>Go Home</a>"
+    else:
+        return "No songs to insert into the database.<br><a href='/home'>Go Home</a>"
 
 @home_route.route("/refresh-token")
 def refresh_token():
