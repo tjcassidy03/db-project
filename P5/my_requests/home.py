@@ -91,7 +91,96 @@ def home():
         <a href='/songs'>Songs</a></br>
         <a href='/playlists'>Playlists</a></br>
         <a href='/artists'>Artists</a></br>
-        <a href='/albums'>Albums</a></br>"""
+        <a href='/album'>Album</a></br>"""
+
+
+def process_track(track, me_id, headers, mycursor):
+    song_sql = """INSERT INTO Song (track_id, track_name, duration_ms) 
+                VALUES (%s, %s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                track_name = VALUES(track_name),
+                duration_ms = VALUES(duration_ms)"""
+    user_songs_sql = """INSERT INTO user_songs (user_id, track_id) 
+                VALUES (%s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                user_id = VALUES(user_id),
+                track_id = VALUES(track_id)"""
+    album_sql = """INSERT INTO Album (album_id, album_name, art_uri, release_date, total_tracks) 
+                VALUES (%s, %s, %s, %s, %s) 
+                ON DUPLICATE KEY UPDATE
+                album_name = VALUES(album_name),
+                art_uri = VALUES(art_uri),
+                release_date = VALUES(release_date),
+                total_tracks = VALUES(total_tracks)"""
+    album_songs_sql = """INSERT INTO album_songs (track_id, album_id) 
+                VALUES (%s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                track_id = VALUES(track_id),
+                album_id = VALUES(album_id)"""
+    song_artists_sql = """INSERT INTO song_artists (track_id, artist_id) 
+                VALUES (%s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                track_id = VALUES(track_id),
+                artist_id = VALUES(artist_id)"""
+    user_albums_sql = """INSERT INTO user_albums (user_id, album_id) 
+                VALUES (%s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                user_id = VALUES(user_id),
+                album_id = VALUES(album_id)"""
+    artist_sql = """INSERT INTO Artist (artist_id, artist_name, follower_count, artist_image_uri) 
+                VALUES (%s, %s, %s, %s) 
+                ON DUPLICATE KEY UPDATE
+                artist_name = VALUES(artist_name),
+                follower_count = VALUES(follower_count),
+                artist_image_uri = VALUES(artist_image_uri)"""
+    album_artists_sql = """INSERT INTO album_artists (album_id, artist_id) 
+            VALUES (%s, %s) 
+            ON DUPLICATE KEY UPDATE 
+            album_id = VALUES(album_id),
+            artist_id = VALUES(artist_id)"""
+    
+    if track:
+        track_id = track.get('id')
+        track_name = track.get('name')
+        duration_ms = track.get('duration_ms')
+
+        # Song table
+        mycursor.execute(song_sql, (track_id, track_name, duration_ms))
+        # user_songs table
+        mycursor.execute(user_songs_sql, (me_id, track_id))
+
+        album = track.get('album', {})
+        album_id = album.get('id')
+        album_name = album.get('name')
+        album_images = album.get('images', [])
+        album_image_uri = album_images[0]['url'] if album_images else None
+        release_date = album.get('release_date')
+        total_tracks = album.get('total_tracks')
+
+        # Album table
+        mycursor.execute(album_sql, (album_id, album_name, album_image_uri, release_date, total_tracks))
+        # album_songs table
+        mycursor.execute(album_songs_sql, (track_id, album_id))
+        # user_albums table
+        mycursor.execute(user_albums_sql, (me_id, album_id))
+
+        artists = album.get('artists', [])
+        for artist in artists:
+            response = requests.get(artist.get('href'), headers=headers)
+            artist = response.json()
+            artist_images = artist.get('images', [])
+            artist_image_uri = artist_images[0]['url'] if artist_images else None
+            artist_id = artist.get('id')
+            artist_name = artist.get('name')
+            followers = artist.get('followers', {})
+            follower_count = followers.get('total') if followers else None
+
+            # Artist table
+            mycursor.execute(artist_sql, (artist_id, artist_name, follower_count, artist_image_uri))
+            # album_artists table
+            mycursor.execute(album_artists_sql, (album_id, artist_id))
+            # song_artists table
+            mycursor.execute(song_artists_sql, (track_id, artist_id))
 
 
 @home_route.route("/update-database-songs")
@@ -198,45 +287,7 @@ def update_database_songs():
         tracks = response.json()
         for item in tracks.get('items', []):
             track = item.get('track', {})
-            if track:
-                track_id = track.get('id')
-                track_name = track.get('name')
-                duration_ms = track.get('duration_ms')
-                # Song table
-                mycursor.execute(song_sql, (track_id, track_name, duration_ms))
-                # user_songs table
-                mycursor.execute(user_songs_sql, (me_id, track_id))
-
-                album = track.get('album', {})
-                album_id = album.get('id')
-                album_name = album.get('name')
-                album_images = album.get('images', [])
-                album_image_uri = album_images[0]['url'] if album_images else None
-                release_date = album.get('release_date')
-                total_tracks = album.get('total_tracks')
-                # Album table
-                mycursor.execute(album_sql, (album_id, album_name, album_image_uri, release_date, total_tracks))
-                # album_songs table
-                mycursor.execute(album_songs_sql, (track_id, album_id))
-                # user_albums table
-                mycursor.execute(user_albums_sql, (me_id, album_id))
-
-                artists = album.get('artists', {})
-                for artist in artists:
-                    response = requests.get(artist.get('href'), headers=headers)
-                    artist = response.json()
-                    artist_images = artist.get('images', [])
-                    artist_image_uri = artist_images[0]['url'] if artist_images else None
-                    artist_id = artist.get('id')
-                    artist_name = artist.get('name')
-                    followers = artist.get('followers', {})
-                    follower_count = followers.get('total') if followers else None
-                    # Artist table
-                    mycursor.execute(artist_sql, (artist_id, artist_name, follower_count, artist_image_uri))
-                    # album_artists table
-                    mycursor.execute(album_artists_sql, (album_id, artist_id))
-                    # song_artists table
-                    mycursor.execute(song_artists_sql, (track_id, artist_id))
+            process_track(track, me_id, headers, mycursor)
         song_next_url = tracks.get('next')
     
     while playlist_next_url:
@@ -261,6 +312,7 @@ def update_database_songs():
             playlist_tracks = playlist.get('tracks', {})
             for item in playlist_tracks.get('items', []):
                 track = item.get('track')
+                process_track(track, me_id, headers, mycursor)
                 mycursor.execute(playlist_songs_sql, (playlist_id, track.get('id')))
             # user_playlists table
             mycursor.execute(user_playlist_sql, (me_id, playlist_id))

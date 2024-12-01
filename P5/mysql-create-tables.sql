@@ -6,7 +6,7 @@ CREATE TABLE `User` (
     user_id VARCHAR(50) NOT NULL,
     email VARCHAR(50),
     display_name VARCHAR(50),
-    image_uri VARCHAR(100),
+    image_uri VARCHAR(200),
     product VARCHAR(50) NOT NULL,
     CONSTRAINT User_PK PRIMARY KEY (user_id)
 );
@@ -23,7 +23,7 @@ CREATE TABLE Playlist (
 CREATE TABLE Album (
     album_id VARCHAR(50) NOT NULL,
     album_name VARCHAR(100) NOT NULL,
-    art_uri VARCHAR(100) NOT NULL,
+    art_uri VARCHAR(200) NOT NULL,
     release_date DATE NOT NULL,
     total_tracks INT NOT NULL,
     CONSTRAINT Album_PK PRIMARY KEY (album_id)
@@ -41,7 +41,7 @@ CREATE TABLE Artist (
     artist_id VARCHAR(50) NOT NULL,
     artist_name VARCHAR(100) NOT NULL,
     follower_count INT NOT NULL,
-    artist_image_uri VARCHAR(100),
+    artist_image_uri VARCHAR(200),
     CONSTRAINT Artist_PK PRIMARY KEY (artist_id)
 );
 
@@ -82,7 +82,7 @@ CREATE TABLE user_albums
 CREATE TABLE playlist_images
 (
     playlist_id VARCHAR(50) NOT NULL,
-    image_uri VARCHAR(100) NOT NULL,
+    image_uri VARCHAR(200) NOT NULL,
     CONSTRAINT playlist_images_FK FOREIGN KEY (playlist_id)
     REFERENCES Playlist(playlist_id) ON DELETE CASCADE,
     CONSTRAINT playlist_images_PK PRIMARY KEY (playlist_id, image_uri)
