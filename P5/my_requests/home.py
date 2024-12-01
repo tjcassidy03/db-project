@@ -32,9 +32,11 @@ mycursor = mydb.cursor()
 
 home_route = Blueprint('home_route', __name__)
 
+
 @home_route.route('/')
 def welcome():
     return "Welcome to my Spotify App <a href='/login'>Login with Spotify</a>"
+
 
 @home_route.route('/login')
 def login():
@@ -46,10 +48,11 @@ def login():
         'redirect_uri': REDIRECT_URI,
         'show_dialog': True
     }
-    
+
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
 
     return redirect(auth_url)
+
 
 @home_route.route('/callback')
 def callback():
@@ -74,6 +77,7 @@ def callback():
     
         return redirect("/home")
     
+
 @home_route.route("/home")
 def home():
     if 'access_token' not in session:
@@ -82,7 +86,9 @@ def home():
     if datetime.now().timestamp() > session['expires_at']:
         return redirect("/refresh-token")
     
-    return "<a href='/update-database-songs'>Update Database Songs</a></br><a href='/users'>Users</a></br>"
+    return """<a href='/update-database-songs'>Update Database Songs</a></br>
+        <a href='/users'>Users</a></br>"""
+
 
 @home_route.route("/update-database-songs")
 def update_database_songs():
@@ -95,13 +101,45 @@ def update_database_songs():
         'Authorization': f"Bearer {session['access_token']}"
     }
 
+    response = requests.get("https://api.spotify.com/v1/me/", headers=headers)
+    me = response.json()
+    me_id = me.get('id')
+    me_email = me.get('email')
+    me_display_name = me.get('display_name')
+    me_image = me.get('images', [])
+    me_image_uri = me_image[0]['url'] if me_image else None
+    me_product = me.get('product')
+    user_sql = """INSERT INTO User (user_id, email, display_name, image_uri, product)
+    VALUES (%s, %s, %s, %s, %s)
+    ON DUPLICATE KEY UPDATE
+    email = VALUES(email),
+    display_name = VALUES(display_name),
+    image_uri = VALUES(image_uri),
+    product = VALUES(product)"""
+    val = (me_id, me_email, me_display_name, me_image_uri, me_product)
+    mycursor.execute(user_sql, val)
+    mydb.commit()
+
     next_url = "https://api.spotify.com/v1/me/tracks?offset=0&limit=50"
     song_sql = """INSERT INTO Song (track_id, track_name, duration_ms) 
-    VALUES (%s, %s, %s) 
-    ON DUPLICATE KEY UPDATE 
-    track_name = VALUES(track_name),
-    duration_ms = VALUES(duration_ms)"""
+                VALUES (%s, %s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                track_name = VALUES(track_name),
+                duration_ms = VALUES(duration_ms)"""
     val = []
+
+    user_songs_sql = """INSERT INTO user_songs (user_id, track_id) 
+                VALUES (%s, %s) 
+                ON DUPLICATE KEY UPDATE 
+                user_id = VALUES(user_id),
+                track_id = VALUES(track_id)"""
+    album_sql = """INSERT INTO Album (album_id, album_name, art_uri, release_date, total_tracks) 
+                VALUES (%s, %s, %s, %s, %s) 
+                ON DUPLICATE KEY UPDATE
+                album_name = VALUES(album_name),
+                art_uri = VALUES(art_uri),
+                release_date = VALUES(release_date),
+                total_tracks = VALUES(total_tracks)"""
 
     while next_url:
         response = requests.get(next_url, headers=headers)
@@ -116,14 +154,27 @@ def update_database_songs():
                 duration_ms = track.get('duration_ms')
                 if track_id and track_name and duration_ms is not None:
                     val.append((track_id, track_name, duration_ms))
+                mycursor.execute(user_songs_sql, (me_id, track_id))
+                mydb.commit()
+
+                album = track.get('album', {})
+                album_id = album.get('id')
+                album_name = album.get('name')
+                album_images = album.get('images', [])
+                album_image_uri = album_images[0]['url'] if album_images else None
+                release_date = album.get('release_date')
+                total_tracks = album.get('total_tracks')
+                mycursor.execute(album_sql, (album_id, album_name, album_image_uri, release_date, total_tracks))
+                mydb.commit()
         next_url = tracks.get('next')
-        
+
     if val:
         mycursor.executemany(song_sql, val)
         mydb.commit()
-        return f"{mycursor.rowcount} songs were inserted into the database.<br><a href='/home'>Go Home</a>"
+        return f"{mycursor.rowcount} songs were inserted into 'Song'.<br><a href='/home'>Go Home</a>"
     else:
         return "No songs to insert into the database.<br><a href='/home'>Go Home</a>"
+
 
 @home_route.route("/refresh-token")
 def refresh_token():
