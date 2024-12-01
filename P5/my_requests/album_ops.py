@@ -21,8 +21,7 @@ def create_album():
             album_name = data.get('album_name'),
             art_uri = data.get('art_uri'),
             release_date = data.get('release_date'),
-            total_tracks = data.get('total_tracks'),
-            popularity = data.get('popularity')
+            total_tracks = data.get('total_tracks')
     )
 
     db.session.add(new_album)
@@ -44,8 +43,6 @@ def update_album(album_id):
         album.release_date = data['release_date']
     if 'total_tracks' in data:
         album.total_tracks = data['total_tracks']
-    if 'popularity' in data:
-        album.popularity = data['popularity']
 
     db.session.commit()
     return jsonify({'message':'album updated successfully!'}), 200
