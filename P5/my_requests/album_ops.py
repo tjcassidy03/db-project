@@ -28,7 +28,7 @@ def create_album():
     db.session.commit()
     return jsonify({'message':'album created successfully!'}), 201
 
-@album_routes.route('/albums/<int:album_id>', methods=['PUT'])
+@album_routes.route('/albums/<string:album_id>', methods=['PUT'])
 def update_album(album_id):
     data = request.get_json()
     album = Album.query.get(album_id)
@@ -47,7 +47,7 @@ def update_album(album_id):
     db.session.commit()
     return jsonify({'message':'album updated successfully!'}), 200
 
-@album_routes.route('/albums/<int:album_id>', methods=['DELETE'])
+@album_routes.route('/albums/<string:album_id>', methods=['DELETE'])
 def delete_album(album_id):
     album = Album.query.get(album_id)
 

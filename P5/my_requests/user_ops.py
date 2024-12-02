@@ -28,7 +28,7 @@ def create_user():
     return jsonify({"message": "User created"}), 201
 
 
-@user_routes.route('/users/<int:user_id>', methods=['PUT'])
+@user_routes.route('/users/<string:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.get_json()
     user = User.query.get(user_id)
@@ -48,7 +48,7 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"message": "User updated successfully"}), 200
 
-@user_routes.route('/users/<int:user_id>', methods=['DELETE'])
+@user_routes.route('/users/<string:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     user = User.query.get(user_id)
 

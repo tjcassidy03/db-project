@@ -27,7 +27,7 @@ def create_artist():
     db.session.commit()
     return jsonify({'message': 'artist created successfully!'}), 200
 
-@artist_routes.route('/artists/<int:artist_id>', methods=['PUT'])
+@artist_routes.route('/artists/<string:artist_id>', methods=['PUT'])
 def update_artist(artist_id):
     data = request.get_json()
     artist = Artist.query.get(artist_id)
@@ -44,7 +44,7 @@ def update_artist(artist_id):
     db.session.commit()
     return jsonify({'message':'artist updated successfully!'}), 200
 
-@artist_routes.route('/artists/<int:artist_id>', methods=['DELETE'])
+@artist_routes.route('/artists/<string:artist_id>', methods=['DELETE'])
 def delete_artist(artist_id):
     artist = Artist.query.get(artist_id)
     if not artist:

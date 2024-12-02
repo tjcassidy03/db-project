@@ -31,7 +31,7 @@ class Album(db.Model):
     art_uri = db.Column(db.String(50), nullable=False)
     release_date = db.Column(db.Date, nullable=False)
     total_tracks = db.Column(db.Integer, nullable=False)
-    popularity = db.Column(db.Integer, nullable=False, check_constraint='popularity BETWEEN 0 AND 100')
+    #popularity = db.Column(db.Integer, nullable=False, check_constraint='popularity BETWEEN 0 AND 100')
 
     songs = db.relationship('Song', secondary='album_songs', backref='albums')
     artists = db.relationship('Artist', secondary='album_artists', backref='albums')
@@ -52,6 +52,13 @@ class Artist(db.Model):
     artist_name = db.Column(db.String(100), nullable=False)
     follower_count = db.Column(db.Integer, nullable=False)
     artist_image_uri = db.Column(db.String(50))
+
+
+
+
+
+
+
 
 
 class UserPlaylist(db.Model):

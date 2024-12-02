@@ -7,7 +7,7 @@ song_routes = Blueprint('song_routes', __name__)
 @song_routes.route('/songs', methods=['GET'])
 def get_songs():
     songs = Song.query.all()
-    result = [{'track_id': song.song_id, 'track_name':song.track_name,'duration_ms':song.duration_ms} for song in songs]
+    result = [{'track_id': song.track_id, 'track_name':song.track_name,'duration_ms':song.duration_ms} for song in songs]
     return jsonify(result), 200
 
 @song_routes.route('/songs', methods=['POST'])
@@ -25,7 +25,7 @@ def create_song():
     db.session.commit()
     return jsonify ({'message':'Song created Successfully!'}), 201
 
-@song_routes.route('/user/<int:track_id>', methods=['PUT'])
+@song_routes.route('/songs/<string:track_id>', methods=['PUT'])
 def update_song(track_id):
     data = request.get_json()
     song = Song.query.get(track_id)
@@ -41,7 +41,7 @@ def update_song(track_id):
     db.session.commit()
     return jsonify ({'message' : 'Song updated Successfully!'}), 200
 
-@song_routes.route('/user/<int:track_id>', methods=['DELETE'])
+@song_routes.route('/songs/<string:track_id>', methods=['DELETE'])
 def delete_song(track_id):
     song = Song.query.get(track_id)
 

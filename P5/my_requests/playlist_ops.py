@@ -4,13 +4,13 @@ from app import db
 
 playlist_routes = Blueprint('playlist_routes', __name__)
 
-playlist_routes.route('/playlists', methods=['GET'])
+@playlist_routes.route('/playlists', methods=['GET'])
 def get_playlists():
     playlists = Playlist.query.all()
     results = [{'playlist_id':playlist.playlist_id, 'playlist_name':playlist.playlist_name, 'playlist_description':playlist.playlist_description, 'followers': playlist.followers} for playlist in playlists]
     return jsonify(results), 200
 
-playlist_routes.route('/playlists', methods=['POST'])
+@playlist_routes.route('/playlists', methods=['POST'])
 def create_playlist():
     data = request.get_json()
     if not data.get('playlist_id'):
@@ -27,7 +27,7 @@ def create_playlist():
     db.session.commit()
     return jsonify({'message':'playlist created successfully!'}), 200
 
-playlist_routes.route('/playlists/<int:playlist_id>', methods=['PUT'])
+@playlist_routes.route('/playlists/<string:playlist_id>', methods=['PUT'])
 def update_playlist(playlist_id):
     data = request.get_json()
     playlist = Playlist.query.get(playlist_id)
@@ -46,7 +46,7 @@ def update_playlist(playlist_id):
     db.session.commit()
     return jsonify({'message':'playlist updated successfully!'}), 200
 
-playlist_routes.route('/playlists/<int:playlist_id>', method=['DELETE'])
+@playlist_routes.route('/playlists/<string:playlist_id>', methods=['DELETE'])
 def delete_playlist(playlist_id):
     playlist = Playlist.query.get(playlist_id)
 
